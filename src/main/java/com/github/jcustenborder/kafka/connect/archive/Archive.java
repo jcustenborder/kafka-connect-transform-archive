@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,23 +28,21 @@ import java.util.Map;
 @Description("The Archive transformation is used to help preserve all of the data for a message when archived to S3.")
 public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
 
-  static final Schema VALUE_SCHEMA = SchemaBuilder.struct()
-      .name("com.github.jcustenborder.kafka.connect.archive.Storage")
-      .field("topic", Schema.OPTIONAL_STRING_SCHEMA)
-      .field("key", Schema.OPTIONAL_BYTES_SCHEMA)
-      .field("value", Schema.OPTIONAL_BYTES_SCHEMA)
-      .field("timestamp", Schema.OPTIONAL_INT64_SCHEMA)
-      .build();
-
 
   @Override
   public R apply(R r) {
-    final Struct value = new Struct(VALUE_SCHEMA)
-        .put("topic", r.topic())
+    final Schema schema = SchemaBuilder.struct()
+        .name("com.github.jcustenborder.kafka.connect.archive.Storage")
+        .field("key", r.keySchema())
+        .field("value", r.valueSchema())
+        .field("topic", Schema.STRING_SCHEMA)
+        .field("timestamp", Schema.INT64_SCHEMA);
+    Struct value = new Struct(schema)
         .put("key", r.key())
         .put("value", r.value())
+        .put("topic", r.topic())
         .put("timestamp", r.timestamp());
-    return r.newRecord(r.topic(), r.kafkaPartition(), Schema.OPTIONAL_BYTES_SCHEMA, r.key(), VALUE_SCHEMA, value, r.timestamp());
+    return r.newRecord(r.topic(), r.kafkaPartition(), null, null, schema, value, r.timestamp());
   }
 
   @Override
