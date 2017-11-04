@@ -16,6 +16,7 @@
 package com.github.jcustenborder.kafka.connect.archive;
 
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
+import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
 import org.apache.kafka.connect.data.Schema;
@@ -26,9 +27,10 @@ import org.apache.kafka.connect.transforms.Transformation;
 import java.util.Map;
 
 @Description("The Archive transformation is used to help preserve all of the data for a message when archived to S3.")
+@DocumentationNote("This transform works by copying the key, value, topic, and timestamp to new record where this is all " +
+    "contained in the value of the message. This will allow connectors like Confluent's S3 connector to properly archive " +
+    "the record.")
 public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
-
-
   @Override
   public R apply(R r) {
     final Schema schema = SchemaBuilder.struct()
