@@ -1,19 +1,35 @@
 # Introduction
 
-Kafka Connect transform to assist with archiving to S3.
+# Transformations
 
-## Kafka 0.11.x and newer
+## Archive
+
+The Archive transformation is used to help preserve all of the data for a message when archived to S3.
+
+### Configuration
+
+| Name | Type | Importance | Default Value | Validator | Documentation|
+| ---- | ---- | ---------- | ------------- | --------- | -------------|
+
+
+#### Standalone Example
 
 ```properties
-
-
+transforms=Archive
+transforms.Archive.type=com.github.jcustenborder.kafka.connect.archive.Archive
+# The following values must be configured.
 ```
 
-## Kafka 0.10.x and older
+#### Distributed Example
 
-```properties
-
-
-
+```json
+{
+    "name": "connector1",
+    "config": {
+        "connector.class": "com.github.jcustenborder.kafka.connect.archive.Archive",
+        "transforms": "Archive",
+        "transforms.Archive.type": "com.github.jcustenborder.kafka.connect.archive.Archive",
+    }
+}
 ```
 
