@@ -29,6 +29,7 @@
   <name>kafka-connect-transform-archive</name>
   <url>https://github.com/jcustenborder/kafka-connect-transform-archive</url>
   <inceptionYear>2017</inceptionYear>
+  <description>Kafka Connect transformation used to help with archiving data to s3. This transformation copies the timestamp, topic, key, and value to a struct in the value of the record.</description>
   <licenses>
     <license>
       <name>Apache License 2.0</name>
@@ -74,4 +75,42 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.confluent</groupId>
+        <artifactId>kafka-connect-maven-plugin</artifactId>
+        <version>0.9.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>kafka-connect</goal>
+            </goals>
+            <configuration>
+              <ownerUsername>jcustenborder</ownerUsername>
+              <confluentControlCenterIntegration>true
+              </confluentControlCenterIntegration>
+              <documentationUrl>
+                https://jcustenborder.github.io/kafka-connect-documentation/
+              </documentationUrl>
+              <ownerName>Jeremy Custenborder</ownerName>
+              <dockerNamespace>jcustenborder</dockerNamespace>
+              <dockerName>kafka-connect-docker</dockerName>
+              <pluginTypes>
+                <pluginType>transform</pluginType>
+              </pluginTypes>
+              <tags>
+                <tag>Archive</tag>
+                <tag>S3</tag>
+              </tags>
+              <title>Archive Transformation</title>
+              <supportUrl>${pom.issueManagement.url}</supportUrl>
+              <supportSummary>Support provided through community involvement.
+              </supportSummary>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
