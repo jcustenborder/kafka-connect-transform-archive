@@ -24,6 +24,7 @@ import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.transforms.Transformation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Description("The Archive transformation is used to help preserve all of the data for a message when archived to S3.")
@@ -33,6 +34,14 @@ import java.util.Map;
 public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
   @Override
   public R apply(R r) {
+    if (r.valueSchema() == null) {
+      return applySchemaless(r);
+    } else {
+      return applyWithSchema(r);
+    }
+  }
+
+  private R applyWithSchema(R r) {
     final Schema schema = SchemaBuilder.struct()
         .name("com.github.jcustenborder.kafka.connect.archive.Storage")
         .field("key", r.keySchema())
@@ -45,6 +54,21 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
         .put("topic", r.topic())
         .put("timestamp", r.timestamp());
     return r.newRecord(r.topic(), r.kafkaPartition(), null, null, schema, value, r.timestamp());
+  }
+
+  @SuppressWarnings("unchecked")
+  private R applySchemaless(R r) {
+
+    final Map<String, Object> archiveValue = new HashMap<>();
+
+    final Map<String, Object> value = (Map<String, Object>) r.value();
+
+    archiveValue.put("key", r.key());
+    archiveValue.put("value", value);
+    archiveValue.put("topic", r.topic());
+    archiveValue.put("timestamp", r.timestamp());
+
+    return r.newRecord(r.topic(), r.kafkaPartition(), null, null, null, archiveValue, r.timestamp());
   }
 
   @Override
