@@ -32,6 +32,19 @@ import java.util.Map;
     "contained in the value of the message. This will allow connectors like Confluent's S3 connector to properly archive " +
     "the record.")
 public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
+
+  public static final String ARCHIVE_STORAGE_SCHEMA_NAMESPACE =
+          "com.github.jcustenborder.kafka.connect.archive.Storage";
+
+  public static Schema getStructSchema(Schema keySchema, Schema valueSchema) {
+    return SchemaBuilder.struct()
+        .name(ARCHIVE_STORAGE_SCHEMA_NAMESPACE)
+        .field("topic", Schema.STRING_SCHEMA)
+        .field("timestamp", Schema.INT64_SCHEMA)
+        .field("key", keySchema)
+        .field("value", valueSchema);
+  }
+
   @Override
   public R apply(R r) {
     if (r.valueSchema() == null) {
@@ -42,17 +55,12 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
   }
 
   private R applyWithSchema(R r) {
-    final Schema schema = SchemaBuilder.struct()
-        .name("com.github.jcustenborder.kafka.connect.archive.Storage")
-        .field("key", r.keySchema())
-        .field("value", r.valueSchema())
-        .field("topic", Schema.STRING_SCHEMA)
-        .field("timestamp", Schema.INT64_SCHEMA);
+    final Schema schema = getStructSchema(r.keySchema(), r.valueSchema());
     Struct value = new Struct(schema)
-        .put("key", r.key())
-        .put("value", r.value())
         .put("topic", r.topic())
-        .put("timestamp", r.timestamp());
+        .put("timestamp", r.timestamp())
+        .put("key", r.key())
+        .put("value", r.value());
     return r.newRecord(r.topic(), r.kafkaPartition(), null, null, schema, value, r.timestamp());
   }
 
