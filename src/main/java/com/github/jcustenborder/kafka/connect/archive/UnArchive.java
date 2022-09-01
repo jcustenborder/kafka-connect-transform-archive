@@ -61,7 +61,10 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
   }
   @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
+    System.out.println(r.value());
+    System.out.println(r.value().toString());
     final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Map.class) : r.value());
+    System.out.println(value);
     return r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
