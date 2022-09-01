@@ -42,27 +42,27 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
     // TODO: we might need to archive also the schema
     final Map<String, Object> value = (Map<String, Object>) r.value();
     return r.newRecord(
-            value.get("topic").toString(),
-            Integer.parseInt(value.get("partition").toString()),
-            null,
-            value.get("key"),
-            null,
-            value.get("value"),
-            Long.parseLong(value.get("timestamp").toString())
+      value.get("topic").toString(),
+      Integer.parseInt(value.get("partition").toString()),
+      null,
+      value.get("key"),
+      null,
+      value.get("value"),
+      Long.parseLong(value.get("timestamp").toString())
     );
   }
     @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
     final Map<String, Object> value = (Map<String, Object>) r.value();
-      return r.newRecord(
-              value.get("topic").toString(),
-              Integer.parseInt(value.get("partition").toString()),
-              null,
-              value.get("key"),
-              null,
-              value.get("value"),
-              Long.parseLong(value.get("timestamp").toString())
-      );
+    return r.newRecord(
+      value.get("topic").toString(),
+      Integer.parseInt(value.get("partition").toString()),
+      null,
+      value.get("key"),
+      null,
+      value.get("value"),
+      Long.parseLong(value.get("timestamp").toString())
+    );
   }
 
   @Override
