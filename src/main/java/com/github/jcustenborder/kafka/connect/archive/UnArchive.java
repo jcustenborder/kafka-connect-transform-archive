@@ -50,7 +50,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
     final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Object.class) : r.value());
     return r.newRecord(
       value.get("topic").toString(),
-      Integer.parseInt(value.get("partition").toString()),
+      value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
       null,
       value.get("key"),
       null,
@@ -63,7 +63,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
     final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Object.class) : r.value());
     return r.newRecord(
       value.get("topic").toString(),
-      Integer.parseInt(value.get("partition").toString()),
+      value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
       null,
       value.get("key"),
       null,
