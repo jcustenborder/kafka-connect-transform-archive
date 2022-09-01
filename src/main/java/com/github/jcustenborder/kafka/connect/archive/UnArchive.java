@@ -37,7 +37,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
       return applyWithSchema(r);
     }
   }
-    @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
   private R applyWithSchema(R r) {
     // TODO: we might need to archive also the schema
     final Map<String, Object> value = (Map<String, Object>) r.value();
@@ -51,7 +51,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
       Long.parseLong(value.get("timestamp").toString())
     );
   }
-    @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
     final Map<String, Object> value = (Map<String, Object>) r.value();
     return r.newRecord(
