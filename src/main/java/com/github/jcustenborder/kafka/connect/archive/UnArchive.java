@@ -28,7 +28,7 @@ import java.util.Map;
 @DocumentationNote("This transform works by copying the key, value, topic, and timestamp to new record where this is all " +
     "contained in the value of the message. This will allow connectors like Confluent's S3 connector to properly unarchive " +
     "the record.")
-public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
+public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> {
   @Override
   public R apply(R r) {
     if (r.valueSchema() == null) {
