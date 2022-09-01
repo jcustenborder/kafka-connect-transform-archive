@@ -50,6 +50,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
         .field("timestamp", Schema.INT64_SCHEMA);
     Struct value = new Struct(schema)
         .put("key", r.key())
+        .put("partition", r.kafkaPartition())
         .put("value", r.value())
         .put("topic", r.topic())
         .put("timestamp", r.timestamp());
