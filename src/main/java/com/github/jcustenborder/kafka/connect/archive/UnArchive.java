@@ -31,30 +31,14 @@ import java.util.Map;
 public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> {
   @Override
   public R apply(R r) {
-    if (r.valueSchema() == null) {
       return applySchemaless(r);
-    } else {
-      return applyWithSchema(r);
-    }
-  }
-  @SuppressWarnings("unchecked")
-  private R applyWithSchema(R r) {
-    // TODO: we might need to archive also the schema
-    final Map<String, Object> value = (Map<String, Object>) r.value();
-    return r.newRecord(
-      value.get("topic").toString(),
-      value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
-      null,
-      value.get("key"),
-      null,
-      value.get("value"),
-      Long.parseLong(value.get("timestamp").toString())
-    );
   }
   @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
     final Map<String, Object> value = (Map<String, Object>) r.value();
-    return r.newRecord(
+    System.out.println("before");
+    System.out.println(value);
+    R record = r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
       null,
@@ -63,6 +47,9 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
       value.get("value"),
       Long.parseLong(value.get("timestamp").toString())
     );
+      System.out.println("record");
+      System.out.println(record);
+    return record;
   }
 
   @Override

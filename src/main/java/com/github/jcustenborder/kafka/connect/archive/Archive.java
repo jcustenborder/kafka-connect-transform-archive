@@ -48,6 +48,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
         .field("partition", Schema.INT64_SCHEMA)
         .field("value", r.valueSchema())
         .field("topic", Schema.STRING_SCHEMA)
+        .field("headers", Schema.STRING_SCHEMA)
         .field("timestamp", Schema.INT64_SCHEMA);
     Struct value = new Struct(schema)
         .put("key", r.key())
@@ -55,7 +56,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
         .put("value", r.value())
         .put("topic", r.topic())
         .put("timestamp", r.timestamp());
-    return r.newRecord(r.topic(), r.kafkaPartition(), null, null, schema, value, r.timestamp());
+    return r.newRecord(r.topic(), r.kafkaPartition(), r.keySchema(), r.key(), schema, value, r.timestamp());
   }
 
   @SuppressWarnings("unchecked")
@@ -71,7 +72,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
     archiveValue.put("partition", r.kafkaPartition());
     archiveValue.put("timestamp", r.timestamp());
 
-    return r.newRecord(r.topic(), r.kafkaPartition(), null, null, null, archiveValue, r.timestamp());
+    return r.newRecord(r.topic(), r.kafkaPartition(), null, r.key(), null, archiveValue, r.timestamp());
   }
 
   @Override
