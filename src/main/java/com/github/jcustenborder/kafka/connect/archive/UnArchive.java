@@ -18,7 +18,6 @@ package com.github.jcustenborder.kafka.connect.archive;
 
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
-import com.google.gson.Gson;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
 import org.apache.kafka.connect.transforms.Transformation;
@@ -30,12 +29,6 @@ import java.util.Map;
     "contained in the value of the message. This will allow connectors like Confluent's S3 connector to properly unarchive " +
     "the record.")
 public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> {
-  private final Gson gson;
-
-  public UnArchive() {
-    this.gson = new Gson();  // Set the initial value for the class attribute x
-  }
-
   @Override
   public R apply(R r) {
     if (r.valueSchema() == null) {
@@ -47,7 +40,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
   @SuppressWarnings("unchecked")
   private R applyWithSchema(R r) {
     // TODO: we might need to archive also the schema
-    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Map.class) : r.value());
+    final Map<String, Object> value = (Map<String, Object>) r.value();
     return r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
@@ -60,10 +53,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
   }
   @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
-    System.out.println(r.value());
-    System.out.println(r.value().toString());
-    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Map.class) : r.value());
-    System.out.println(value);
+    final Map<String, Object> value = (Map<String, Object>) r.value();
     return r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
