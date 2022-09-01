@@ -19,6 +19,7 @@ package com.github.jcustenborder.kafka.connect.archive;
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
 import org.apache.kafka.connect.transforms.Transformation;
@@ -47,7 +48,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
   @SuppressWarnings("unchecked")
   private R applyWithSchema(R r) {
     // TODO: we might need to archive also the schema
-    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Object.class) : r.value());
+    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Map.class) : r.value());
     return r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
@@ -60,7 +61,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
   }
   @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
-    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Object.class) : r.value());
+    final Map<String, Object> value = (Map<String, Object>) (r.value() instanceof String ? this.gson.fromJson(r.value().toString(), Map.class) : r.value());
     return r.newRecord(
       value.get("topic").toString(),
       value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
