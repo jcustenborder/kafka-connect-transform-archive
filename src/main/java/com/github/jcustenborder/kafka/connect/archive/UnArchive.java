@@ -39,7 +39,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
     System.out.println("before");
     System.out.println(value);
     R record = r.newRecord(
-        value.get("topic").toString(),
+        null,
         value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
         null,
         value.get("key"),
