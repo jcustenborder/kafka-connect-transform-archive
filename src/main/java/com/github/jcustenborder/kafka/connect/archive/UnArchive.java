@@ -19,7 +19,6 @@ package com.github.jcustenborder.kafka.connect.archive;
 import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
 import org.apache.kafka.connect.transforms.Transformation;
