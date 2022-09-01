@@ -45,6 +45,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
     final Schema schema = SchemaBuilder.struct()
         .name("com.github.jcustenborder.kafka.connect.archive.Storage")
         .field("key", r.keySchema())
+        .field("partition", Schema.INT64_SCHEMA)
         .field("value", r.valueSchema())
         .field("topic", Schema.STRING_SCHEMA)
         .field("timestamp", Schema.INT64_SCHEMA);
