@@ -56,12 +56,21 @@
     <system>github</system>
     <url>https://github.com/jcustenborder/kafka-connect-transform-archive/issues</url>
   </issueManagement>
+  <properties>
+      <connect.api.version>3.0.0</connect.api.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.github.jcustenborder</groupId>
       <artifactId>cef-parser</artifactId>
       <version>[0.0.1.7,0.0.1.2000)</version>
     </dependency>
+      <dependency>
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>connect-api</artifactId>
+          <version>${connect.api.version}</version>
+          <scope>provided</scope>
+      </dependency>
     <dependency>
       <groupId>org.reflections</groupId>
       <artifactId>reflections</artifactId>
