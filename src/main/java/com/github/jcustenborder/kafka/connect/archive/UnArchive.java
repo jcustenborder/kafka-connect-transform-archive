@@ -20,6 +20,7 @@ import com.github.jcustenborder.kafka.connect.utils.config.Description;
 import com.github.jcustenborder.kafka.connect.utils.config.DocumentationNote;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.connect.connector.ConnectRecord;
+import org.apache.kafka.connect.header.Headers;
 import org.apache.kafka.connect.transforms.Transformation;
 
 import java.util.Map;
@@ -38,12 +39,13 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
     final Map<String, Object> value = (Map<String, Object>) r.value();
     return r.newRecord(
         r.topic(),
-        value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
+        value.getOrDefault("partition", null) != null ? Integer.parseInt(value.get("partition").toString()) : null,
         null,
         value.get("key"),
         null,
         value.get("value"),
-        Long.parseLong(value.get("timestamp").toString())
+        Long.parseLong(value.get("timestamp").toString()),
+        (Headers) value.getOrDefault("headers", null)
     );
   }
 
