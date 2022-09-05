@@ -48,13 +48,15 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
     final Schema schema = SchemaBuilder.struct()
         .name("com.github.jcustenborder.kafka.connect.archive.Storage")
         .field("key", r.keySchema())
+        .field("key_string", Schema.STRING_SCHEMA)
         .field("partition", Schema.INT64_SCHEMA)
         .field("value", r.valueSchema())
         .field("topic", Schema.STRING_SCHEMA)
         .field("headers", Schema.STRING_SCHEMA)
         .field("timestamp", Schema.INT64_SCHEMA);
     Struct value = new Struct(schema)
-        .put("key", serialize((Serializable) r.key()))
+        .put("key", r.key())
+        .put("key_string", String.valueOf(r.key()).replaceAll("[^\\x00-\\x7F]", ""))
         .put("partition", r.kafkaPartition())
         .put("value", r.value())
         .put("topic", r.topic())
@@ -65,7 +67,8 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
   private R applySchemaless(R r) {
     final Map<String, Object> archiveValue = new HashMap<>();
 
-    archiveValue.put("key", serialize((Serializable) r.key()));
+    archiveValue.put("key", r.key());
+    archiveValue.put("key_string", String.valueOf(r.key()).replaceAll("[^\\x00-\\x7F]", ""));
     archiveValue.put("value", r.value());
     archiveValue.put("topic", r.topic());
     archiveValue.put("partition", r.kafkaPartition());
