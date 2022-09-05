@@ -24,6 +24,9 @@ import org.apache.kafka.connect.transforms.Transformation;
 
 import java.util.Map;
 
+import static org.apache.commons.lang3.SerializationUtils.deserialize;
+
+
 @Description("The UnArchive transformation is used to unarchive data from S3 into the original format.")
 @DocumentationNote("This transform works by copying the key, value, topic, and timestamp to new record where this is all " +
     "contained in the value of the message. This will allow connectors like Confluent's S3 connector to properly unarchive " +
@@ -40,7 +43,7 @@ public class UnArchive<R extends ConnectRecord<R>> implements Transformation<R> 
         r.topic(),
         value.get("partition") != null ? Integer.parseInt(value.get("partition").toString()) : null,
         null,
-        value.get("key"),
+        deserialize((byte[]) value.get("key")),
         null,
         value.get("value"),
         Long.parseLong(value.get("timestamp").toString())

@@ -24,8 +24,11 @@ import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.transforms.Transformation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.SerializationUtils.serialize;
 
 @Description("The Archive transformation is used to help preserve all of the data for a message when archived to S3.")
 @DocumentationNote("This transform works by copying the key, value, topic, and timestamp to new record where this is all " +
@@ -51,7 +54,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
         .field("headers", Schema.STRING_SCHEMA)
         .field("timestamp", Schema.INT64_SCHEMA);
     Struct value = new Struct(schema)
-        .put("key", r.key())
+        .put("key", serialize((Serializable) r.key()))
         .put("partition", r.kafkaPartition())
         .put("value", r.value())
         .put("topic", r.topic())
@@ -62,7 +65,7 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
   private R applySchemaless(R r) {
     final Map<String, Object> archiveValue = new HashMap<>();
 
-    archiveValue.put("key", r.key());
+    archiveValue.put("key", serialize((Serializable) r.key()));
     archiveValue.put("value", r.value());
     archiveValue.put("topic", r.topic());
     archiveValue.put("partition", r.kafkaPartition());
@@ -85,4 +88,6 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
   public void configure(Map<String, ?> map) {
 
   }
+
+
 }
