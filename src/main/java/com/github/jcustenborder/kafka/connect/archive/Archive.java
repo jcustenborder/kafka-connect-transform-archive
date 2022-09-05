@@ -24,11 +24,8 @@ import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.transforms.Transformation;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.apache.commons.lang3.SerializationUtils.serialize;
 
 @Description("The Archive transformation is used to help preserve all of the data for a message when archived to S3.")
 @DocumentationNote("This transform works by copying the key, value, topic, and timestamp to new record where this is all " +
