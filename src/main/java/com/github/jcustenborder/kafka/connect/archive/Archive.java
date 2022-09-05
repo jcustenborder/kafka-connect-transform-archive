@@ -59,15 +59,11 @@ public class Archive<R extends ConnectRecord<R>> implements Transformation<R> {
     return r.newRecord(r.topic(), r.kafkaPartition(), r.keySchema(), r.key(), schema, value, r.timestamp());
   }
 
-  @SuppressWarnings("unchecked")
   private R applySchemaless(R r) {
-
     final Map<String, Object> archiveValue = new HashMap<>();
 
-    final Map<String, Object> value = (Map<String, Object>) r.value();
-
     archiveValue.put("key", r.key());
-    archiveValue.put("value", value);
+    archiveValue.put("value", r.value());
     archiveValue.put("topic", r.topic());
     archiveValue.put("partition", r.kafkaPartition());
     archiveValue.put("timestamp", r.timestamp());
