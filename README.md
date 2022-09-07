@@ -28,11 +28,18 @@ This transform works by copying the key, value, topic, and timestamp to new reco
 This configuration is used typically along with [standalone mode](http://docs.confluent.io/current/connect/concepts.html#standalone-workers).
 
 ```properties
+# Archive
 name=Connector1
 connector.class=org.apache.kafka.some.SourceConnector
 tasks.max=1
 transforms=tran
 transforms.tran.type=com.github.jcustenborder.kafka.connect.archive.Archive
+# Unarchive
+name=Connector1
+connector.class=org.apache.kafka.some.SourceConnector
+tasks.max=1
+transforms=tran
+transforms.tran.type=com.github.jcustenborder.kafka.connect.archive.UnArchive
 ```
 
 ##### Distributed Example
@@ -42,11 +49,19 @@ Write the following json to `connector.json`, configure all of the required valu
 post the configuration to one the distributed connect worker(s).
 
 ```json
+// Archive
 {
   "name" : "Connector1",
   "connector.class" : "org.apache.kafka.some.SourceConnector",
   "transforms" : "tran",
   "transforms.tran.type" : "com.github.jcustenborder.kafka.connect.archive.Archive"
+}
+// UnArchive
+{
+  "name" : "Connector1",
+  "connector.class" : "org.apache.kafka.some.SourceConnector",
+  "transforms" : "tran",
+  "transforms.tran.type" : "com.github.jcustenborder.kafka.connect.archive.UnArchive"
 }
 ```
 
